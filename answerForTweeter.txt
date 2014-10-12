@@ -1,0 +1,125 @@
+?- consult('/home/david/prolog/tweeter.pl').
+true.
+
+?- listing(followed).
+followed(anna, fred).
+followed(fred, julia).
+followed(fred, susan).
+followed(john, fred).
+followed(julia, fred).
+followed(susan, john).
+followed(susan, julia).
+
+true.
+
+?- listing(tweeted).
+tweeted(anna, tweet1).
+tweeted(anna, tweet5).
+tweeted(fred, tweet2).
+tweeted(fred, tweet7).
+tweeted(fred, tweet8).
+tweeted(john, tweet3).
+tweeted(john, tweet4).
+tweeted(julia, tweet6).
+tweeted(susan, tweet9).
+tweeted(susan, tweet10).
+true.
+
+
+1) Which tweet can Fred see(assuming that only direct folowers will see a tweet)?
+?- listing(can_see).
+		can_see(A, C) :-
+			(   followed(A, B),
+			    tweeted(B, C)
+			;   tweeted(A, C)
+			).
+		true.
+
+?- can_see(fred,See).
+See = tweet6 ;
+See = tweet9 ;
+See = tweet10 ;
+See = tweet2 ;
+See = tweet7 ;
+See = tweet8.
+
+2) Find all the persons who are friends. i,g., they follow each other.
+"I am assuming that person who follow other person is also friend of the follow person
+eg: Anna follows Fred and Fred follows Julia and Susan. So friends result for Anna would be:
+Fred, Julia and Susan"
+?- listing(friends).
+friends(A, B) :-
+		(   followed(A, B)
+		;   followed(C, B),
+		    followed(A, C),
+		    \+ A=B,
+		    \+ A=C
+		).
+	true.
+
+?- friends(anna,X).
+X = fred ;
+X = julia ;
+X = susan ;
+false.
+
+?- friends(fred,X).
+X = julia ;
+X = susan ;
+X = john ;
+X = julia.
+
+?- friends(susan,X).
+X = john ;
+X = julia ;
+X = fred ;
+X = fred ;
+false.
+
+3) Output for each person which wteet they can see.
+?- tweeted(anna,Tweetsee).
+Tweetsee = tweet1 ;
+Tweetsee = tweet5.
+
+?- tweeted(fred,Tweetsee).
+Tweetsee = tweet2 ;
+Tweetsee = tweet7 ;
+Tweetsee = tweet8.
+
+?- tweeted(john,Tweetsee).
+Tweetsee = tweet3 ;
+Tweetsee = tweet4.
+
+?- tweeted(julia,Tweetsee).
+Tweetsee = tweet6.
+
+?- tweeted(susan,Tweetsee).
+Tweetsee = tweet9 ;
+Tweetsee = tweet10.
+
+4) If everyone retweeted every tweet they get, which tweet can see Fred?
+?- listing(retweeted).
+retweeted(A, B) :-
+		(   tweeted(A, B)
+		;   followed(A, C),
+		    tweeted(C, B)
+		).
+	true.
+
+Fred can see following tweets:
+?- retweeted(fred,Cansee).
+Cansee = tweet2 ;
+Cansee = tweet7 ;
+Cansee = tweet8 ;
+Cansee = tweet6 ;
+Cansee = tweet9 ;
+Cansee = tweet10.
+
+Susan can see following tweets:
+?- retweeted(susan,Cansee).
+Cansee = tweet9 ;
+Cansee = tweet10 ;
+Cansee = tweet3 ;
+Cansee = tweet4 ;
+Cansee = tweet6.
+
