@@ -17,6 +17,10 @@ tweeted(julia, 	tweet6).
 tweeted(susan, 	tweet9).
 tweeted(susan, 	tweet10).
 
-can_see(X,Y) :- followed(X,Z),tweeted(Z,Y)|tweeted(X,Y).
-friends(X,Y) :- followed(X,Y)|followed(Z,Y),followed(X,Z),\+(X=Y),\+(X=Z).
-retweeted(X,Y) :- tweeted(X,Y)|followed(X,Z),tweeted(Z,Y).
+can_see(X,Y) :- tweeted(X,Y).
+
+friends(X,Y) :- followed(X,Y).
+friends(X,Y) :- followed(Z,Y),followed(X,Z),\+(X=Y),\+(X=Z).
+
+retweeted(X,Y) :- tweeted(X,Y).
+retweeted(X,Y) :- followed(X,Z),tweeted(Z,Y).

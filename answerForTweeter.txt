@@ -28,34 +28,28 @@ true.
 
 1) Which tweet can Fred see(assuming that only direct folowers will see a tweet)?
 ?- listing(can_see).
-		can_see(A, C) :-
-			(   followed(A, B),
-			    tweeted(B, C)
-			;   tweeted(A, C)
-			).
-		true.
+can_see(A, B) :-
+	tweeted(A, B).
+true.
 
-?- can_see(fred,See).
-See = tweet6 ;
-See = tweet9 ;
-See = tweet10 ;
-See = tweet2 ;
-See = tweet7 ;
-See = tweet8.
+?- can_see(fred,View).
+View = tweet2 ;
+View = tweet7 ;
+View = tweet8.
+
 
 2) Find all the persons who are friends. i,g., they follow each other.
 "I am assuming that person who follow other person is also friend of the follow person
 eg: Anna follows Fred and Fred follows Julia and Susan. So friends result for Anna would be:
 Fred, Julia and Susan"
-?- listing(friends).
 friends(A, B) :-
-		(   followed(A, B)
-		;   followed(C, B),
-		    followed(A, C),
-		    \+ A=B,
-		    \+ A=C
-		).
-	true.
+	followed(A, B).
+friends(B, A) :-
+	followed(C, A),
+	followed(B, C),
+	\+ B=A,
+	\+ B=C.
+true.
 
 ?- friends(anna,X).
 X = fred ;
@@ -98,13 +92,13 @@ Tweetsee = tweet9 ;
 Tweetsee = tweet10.
 
 4) If everyone retweeted every tweet they get, which tweet can see Fred?
-?- listing(retweeted).
+ ?- listing(retweeted).
 retweeted(A, B) :-
-		(   tweeted(A, B)
-		;   followed(A, C),
-		    tweeted(C, B)
-		).
-	true.
+	tweeted(A, B).
+retweeted(A, C) :-
+	followed(A, B),
+	tweeted(B, C).
+true.
 
 Fred can see following tweets:
 ?- retweeted(fred,Cansee).
