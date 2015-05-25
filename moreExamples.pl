@@ -15,9 +15,21 @@ fac(N,F) :- NAUX is N - 1, fac(NAUX,FAUX), F is N * FAUX.
 myrevers([],[]).
 myrevers([H|T], Rev) :- myrevers(T, Trev), append(Trev, [H], Rev).
 
+
+my_reverse2(L,R) :- getReverse(L,R,[]).
+
+getReverse([], L, L).
+getReverse([H|T], Y, R) :-
+			getReverse(T, Y, [H|R]).
+
+
 % Result;
-% ?- myrevers([1,2,3,4,5], X). 		;=>  X = [5, 4, 3, 2, 1].
-% ?- myrevers([a, b, r, x, z], X).	:=>  X = [z, x, r, b, a].
+% ?- myrevers([1,2,3,4,5], X). 				;=>  X = [5, 4, 3, 2, 1].
+% ?- myrevers([a, b, r, x, z], X).			:=>  X = [z, x, r, b, a].
+%
+% ?- my_reverse2([1,2,3],X). 				;=>  X = [3, 2, 1].
+% ?- my_reverse2([1,2,3,4,5,6,7,8],X).  	;=>  X = [8, 7, 6, 5, 4, 3, 2, 1].
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % white predicete to get sum of integer e.g getsum(4,X) = X = 10
@@ -25,7 +37,7 @@ sum_to(N,1) :- N =< 1.
 sum_to(N, Result) :- N > 1,
 					TemN is N - 1,
 					sum_to(TemN, TepRes),
-					Result is TepRes + N.
+					Result is TepRes + N,!.
 
 % Result;
 % ?- sum_to(5,X). 		;=>  X = 15 .
@@ -125,4 +137,21 @@ fib(N,F) :- N1 is N - 1,
 % ?- fib(3,X). 		;=>  X = 2.
 % ?- fib(1,X). 		;=>  X = 1 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% write predicete which check if first value is a member of the list e.g. mem(a,[a,b,c,a]) = true, true, false
+
+is_member(X, [H|T]) :- X = H;
+					is_member(X, T).
+
+is_member2(X,L) :- append(_,[X|_], L).
+
+% Result
+% ?- is_member(4,[1,2,3,4]).  		;=>  true .
+% ?- is_member(4,[1,4,3,4]). 		;=>  true ; true ; false.
+% ?- is_member(a,[a,b,c,d,a,r,k]).  ;=>  true ; true ; false.
+% ?- is_member(f,[a,b,c,d,a,r,k]).  :=>  false.
+%
+% ?- is_member2(f,[a,b,c,d,a,r,k]). 	;=>  false.
+% ?- is_member2(f,[a,b,c,d,a,r,k,f]).	;=>  true ; false.
+% ?- is_member2(a,[a,b,c,d,a,r,k,f]). 	;=>  true ; true ; false.
 
