@@ -39,7 +39,7 @@ sum_to(N, Result) :- N > 1,
 % prefix(X,Y) is true if the list presented by X is a prefix of the list presented by Y
 % suffix(X,Y) is true if the list presented by x is a suffix of the list presented by Y 
 
-myAppend([], X, X).
+myAppend([], Y, Y).
 myAppend([H|T], Y, [H|Rest]) :- myAppend(T, Y, Rest).
 
 prefix(X, Y) :- myAppend(X, _, Y).
@@ -65,3 +65,8 @@ suffix(A, B) :- myAppend(_, A, B).
 %						;=>  X = [b] ;
 %						;=>  X = [] ;
 %						;=>  false.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+getlist(0, []).
+getlist(X,[X|List]) :- Prev is X - 1, getlist(Prev, List).
