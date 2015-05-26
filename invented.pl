@@ -17,6 +17,46 @@ no_beam :-
 		genius(P),
 		write('I found intelligent life, sir!'), nl.
 
+some([H|T]) :- something(H,T).
+something(X,[X]).
+something(X,[_|T]) :- something(X,T).
+
+% Result;
+% ?- some([1]). 			;=>  false.
+% ?- some([1,4]). 			:=>  false.
+% ?- some([1,1]).			;=>  true ;  false.
+% ?- some([1,2,3,4,5,1]). 	;=>  true ;  false.
+% ?- some([1,2,3,4,5,1,5]).	;=>  false.
+%
+% ?- something(X,[1,2,3,4]). 	;=> X = 4 ; false.
+% ?- something(X,[1]). 			:=> X = 1 ; false.
+% ?- something(X,[]). 			;=> false.
+% ?- something(X,[_]). 			;=> true .
+
+duplicate([X,X|_],X).
+duplicate([_|T],X):- duplicate(T,X).
+
+% Result;
+% ?- duplicate([1,2,4,4,5,6,4,3,3],X). 		;=>  X = 4 ;  X = 3 ;  false.
+% ?- duplicate([1,2,4,5,6,4,3,3],X).		;=>  X = 3 ;  false.
+% ?- duplicate([1,2,4,5,6,4,3,33],X).		:=>  false.
+
+revAppend([], X, X).
+revAppend([X|Y], Z, W) :- revAppend(Y, [X|Z], W).
+
+% Result;
+% ?- revAppend([3,2,1], [], [1,2,3]). 		;=>  true.
+% ?- revAppend([1,2,3],[],L).				;=>  L = [3, 2, 1].
+% ?- revAppend([1,2,3],First,Last).			:=>  Last = [3, 2, 1|First].
+% ?- revAppend(F, [], [1,2,3,4]). 			;=>  F = [4, 3, 2, 1] ; ERROR: Out of global stack
+% ?- revAppend(First, Last, [1,2,3]). 		:=>  First = [],   		Last = [1, 2, 3] ;
+%												 First = [1],  		Last = [2, 3] ;
+% 												 First = [2, 1],  	Last = [3] ;
+%												 First = [3, 2, 1], Last = [] ;
+%
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  http:///www.learnprolognow.org/lpnpage.php?pagetype=html&pageid=lpn-htmlse16  %%
 
@@ -56,3 +96,4 @@ twice([],[]).
 twice([H|T],Result):-
 			twice(T, Rest),
 			append([H,H], Rest, Result).
+
